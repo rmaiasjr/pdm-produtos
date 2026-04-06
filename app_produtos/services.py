@@ -10,7 +10,7 @@ from .models import Produto
 from .exceptions import ApiError
 
 
-# ---------------- IMAGEM ----------------
+# TRATAR IMAGEM
 def _baixar_e_salvar_imagem(produto, url):
     """Faz download da imagem externa e salva no ImageField do produto."""
     try:
@@ -24,7 +24,7 @@ def _baixar_e_salvar_imagem(produto, url):
         raise ApiError({"imagem": f"Erro ao baixar imagem: {e}"}, status=400)
 
 
-# ---------------- VALIDAÇÃO ----------------
+# VALIDAÇÕES DO PRODUTO
 def validar_produto(dados, parcial=False):
     erros = {}
 
@@ -51,7 +51,7 @@ def validar_produto(dados, parcial=False):
     if erros:
         raise ApiError(erros, status=400)
 
-# ---------------- CRUD ----------------
+# DEFINIÇÕES DO CRUD
 @transaction.atomic
 def criar_produto(dados):
     imagem_url=dados.get("imagem", "")
@@ -63,8 +63,8 @@ def criar_produto(dados):
         imagem_url=imagem_url
     )
 
-    if imagem_url:
-        _baixar_e_salvar_imagem(produto, imagem_url)
+    # if imagem_url:
+    #     _baixar_e_salvar_imagem(produto, imagem_url)
 
     return produto.id
 
@@ -81,8 +81,8 @@ def atualizar_produto(produto, dados):
     produto.data_alteracao = timezone.now()
     produto.save()
 
-    if url_mudou:
-        _baixar_e_salvar_imagem(produto, nova_url)
+    # if url_mudou:
+    #     _baixar_e_salvar_imagem(produto, nova_url)
 
 
 @transaction.atomic
