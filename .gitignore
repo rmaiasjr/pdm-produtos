@@ -1,0 +1,33 @@
+# Ambiente virtual
+venv/
+env/
+.venv/
+
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+secret_key.txt
+
+# Configurações locais (nunca suba isso!)
+local_settings.py
+
+# Arquivos estáticos coletados
+staticfiles/
+static_root/
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
