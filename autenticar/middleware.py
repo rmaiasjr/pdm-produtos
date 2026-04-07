@@ -12,7 +12,7 @@ class MiddlewareChaveAPI:
         if any(request.path.startswith(r) for r in rotas_publicas):
             return self.get_response(request)
 
-        chave = request.headers.get('chave')
+        chave = request.headers.get('api-key')
 
         if not chave:
             return JsonResponse({'erro': 'API Key não fornecida'}, status=401)
