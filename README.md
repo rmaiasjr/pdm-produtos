@@ -26,6 +26,11 @@ pdm-produtos/
 ├── autenticar/        # App de autenticação
 ```
 ---
+## 🌐 URL base
+A URL base a ser utilizada nas requisições é:
+``` http
+https://rmsjr.pythonanywhere.com
+```
 
 ## 🔐 Autenticação
 
@@ -43,7 +48,6 @@ api-key: SUA_API_KEY
 ### Listar todos os produtos
 ```http
 GET /produtos/
-Header: chave=SUA_API_KEY
 ```
 
 #### Resposta:
@@ -161,11 +165,10 @@ DELETE /produtos/{id}/
 
 ## 🖼️ Upload de Imagens
 
-O serviço PythonAnyWhere no plano gratuíto não suporta requisições para serviços externos. Sendo assim, o upload de aruqivos foi desativado para não gerar erro nas requisições.
-O funcionametno pode ser consultado no código comendado no arquivo `services.py` do app `app_produtos`.
-
+O PythonAnyWhere não permite que as aplicações hospedadas no serviço gratuíto façam requisições para servidores externos. Por este motivo, o upload das imagens foi desativado para não gerar erro nas requisições.
+O código da conversão da imagem pode ser observado no arquivo `services.py` do app `app_produtos`.
 ---
 
 ## 📝 Licença
 
-Este projeto foi desenvolvido para fins educacionais.
+Este projeto foi desenvolvido por **Renato Maia** para fins educacionais.
