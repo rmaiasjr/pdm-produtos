@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator
 class Pedido(models.Model):
     data_emissao = models.DateTimeField(auto_now_add=True)
     ultima_alteracao = models.DateTimeField(auto_now=True)
+    excluido = models.BooleanField(default=False)
     cliente = models.ForeignKey('clientes.Cliente', 
                                 on_delete=models.PROTECT,
                                 related_name="pedidos")
@@ -38,6 +39,7 @@ class ItemPedido(models.Model):
     nivel_rentabilidade = models.CharField(max_length=5,
                                            blank=True,
                                            choices=NivelRentabilidade.choices)
+    excluido = models.BooleanField(default=False)
 
 
     def calcular_nivel_rentabilidade(self):
@@ -62,7 +64,7 @@ class ItemPedido(models.Model):
                 self.nivel_rentabilidade = nivel
 
         if self.produto_id and self.quantidade:
-            multiplo = self.produto.multiplo_venda
+            multiplo = self.produto.multiplo
             if multiplo and self.quantidade % multiplo != 0:
                 erros['quantidade'] = (
                     f'Este produto só pode ser vendido em múltiplos de {multiplo}.')

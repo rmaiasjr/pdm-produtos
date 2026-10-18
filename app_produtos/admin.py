@@ -7,4 +7,4 @@ class ChaveAPIAdmin(admin.ModelAdmin):
     list_display = ('nome', 'codigo', 'preco_unitario', 'excluido')
     readonly_fields = ('imagem',)
     list_filter = ('excluido',)
-    search_fields = ('nome', 'codigo')
+    search_fields = ('id', 'nome', 'codigo')

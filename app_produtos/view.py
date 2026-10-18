@@ -39,7 +39,7 @@ def produtos_view(request, produto_id=None):
         id_criado = criar_produto(dados)
         return JsonResponse({"id": id_criado}, status=201)
 
-    elif request.method == "PATCH":
+    elif request.method == "PUT":
         if not produto_id:
             raise IdObrigatorio()
         dados = _parse_e_validar(request, parcial=True)
