@@ -8,6 +8,7 @@ env/
 __pycache__/
 db.sqlite3
 media/
+produtos/settings.py
 
 # Variáveis de ambiente e segredos
 .env
