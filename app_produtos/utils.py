@@ -21,7 +21,8 @@ def serializar_produto(produto, request=None):
         "id": produto.id,
         "nome": produto.nome,
         "codigo": produto.codigo,
-        "valor": float(produto.valor),
-        "data_alteracao": produto.data_alteracao.isoformat(),
+        "preco_unitario": float(produto.preco_unitario),
+        "multiplo": int(produto.multiplo),
+        "ultma_alteracao": produto.ultma_alteracao.isoformat(),
         "imagem": imagem
     }

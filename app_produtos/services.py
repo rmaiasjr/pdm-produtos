@@ -36,13 +36,13 @@ def validar_produto(dados, parcial=False):
         if not dados.get("codigo"):
             erros["codigo"] = "Código é obrigatório"
 
-    if not parcial or "valor" in dados:
+    if not parcial or "preco_unitario" in dados:
         try:
-            valor = Decimal(dados.get("valor"))
-            if valor <= 0:
-                erros["valor"] = "Valor deve ser maior que zero"
+            preco_unitario = Decimal(dados.get("preco_unitario"))
+            if preco_unitario <= 0:
+                erros["preco_unitario"] = "Valor deve ser maior que zero"
         except (InvalidOperation, TypeError):
-            erros["valor"] = "Valor inválido"
+            erros["preco_unitario"] = "Valor inválido"
 
     if not parcial or "imagem" in dados:
         if not dados.get("imagem"):
@@ -59,7 +59,8 @@ def criar_produto(dados):
     produto = Produto.objects.create(
         nome=dados["nome"],
         codigo=dados["codigo"],
-        valor=dados["valor"],
+        preco_unitario=dados["preco_unitario"],
+        multiplo=dados['multiplo'],
         imagem_url=imagem_url
     )
 
@@ -74,11 +75,11 @@ def atualizar_produto(produto, dados):
     nova_url = dados.get("imagem")
     url_mudou = nova_url and nova_url != produto.imagem_url
     
-    for campo in ["nome", "codigo", "valor", "imagem"]:
+    for campo in ["nome", "codigo", "preco_unitario", "imagem"]:
         if campo in dados:
             setattr(produto, campo, dados[campo]) if campo != "imagem" else setattr(produto, "imagem_url", dados[campo])
 
-    produto.data_alteracao = timezone.now()
+    produto.ultima_alteracao = timezone.now()
     produto.save()
 
     # if url_mudou:
