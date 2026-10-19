@@ -15,6 +15,11 @@ A API para gerenciamento de produtos foi desenvolvida com **Django 6** e autenti
 - Listar produtos
 - Atualizar produtos
 - Excluir produtos (soft delete)
+- Listar clientes (somente leitura)
+- Emitir pedidos com itens
+- Consultar pedidos
+- Alterar pedidos
+- Excluir pedidos (soft delete)
 
 ---
 ## 🗂️ Estrutura do Projeto
@@ -22,8 +27,10 @@ A API para gerenciamento de produtos foi desenvolvida com **Django 6** e autenti
 ```
 pdm-produtos/
 ├── produtos/          # Configurações centrais do Django (settings, urls raiz)
-├── app_produtos/      # App de CRUD de produtos
-├── autenticar/        # App de autenticação
+├── app_produtos/      # App de CRUD de produtos (também fornece ApiError, tratar_erros e validar_json)
+├── clientes/          # App de consulta de clientes (somente leitura)
+├── pedidos/           # App de pedidos e itens de pedido
+├── autenticar/        # App de autenticação (middleware da api-key)
 ```
 ---
 ## 🌐 URL base
@@ -161,7 +168,142 @@ DELETE /produtos/{id}/
 `Status code: 200`
 
 ---
+## 👥 Endpoints de Clientes
 
+> Somente leitura. Os clientes são pré-cadastrados (Django admin). Qualquer método diferente de `GET` retorna **405**.
+
+### Listar todos os clientes
+
+```
+GET /clientes/
+```
+
+#### Resposta:
+
+A lista vem ordenada por nome.
+
+```
+[
+    {
+        "id": 1,
+        "nome": "Cliente 1"
+    },
+    {
+        "id": 2,
+        "nome": "Cliente 2"
+    }
+]
+```
+
+---
+
+### Obter cliente por ID
+
+```
+GET /clientes/{id}
+```
+
+#### Resposta:
+
+```
+{
+    "id": 1,
+    "nome": "Cliente 1"
+}
+```
+
+Retorna **404** se o cliente não existir.
+
+---
+
+## 🧾 Endpoints de Pedidos
+
+> As rotas de pedido por ID **não** usam barra no final (`/pedidos/5`, e não `/pedidos/5/`).
+
+### Listar todos os pedidos
+
+```
+GET /pedidos/
+```
+
+---
+
+### Obter pedido por ID
+
+```
+GET /pedidos/{id}
+```
+
+Pedido excluído retorna **404**.
+
+---
+
+### Criar pedido
+
+```
+POST /pedidos/
+Content-Type: application/json
+```
+
+#### Request
+
+*Body*
+
+```
+{
+    "cliente_id": 1,
+    "itens": [
+        {
+            "produto_id": 1,
+            "quantidade": 4,
+            "preco_liquido": 12.5
+        }
+    ]
+}
+```
+
+- `cliente_id`: obrigatório, deve ser um cliente existente.
+- `itens`: lista de itens do pedido.
+- `produto_id`: deve ser um produto existente e não excluído.
+- `quantidade`: inteiro maior que zero e múltiplo do `multiplo` do produto.
+- `preco_liquido`: preço unitário informado pelo usuário, maior que zero e com no máximo 2 casas decimais. Se omitido, assume o preço do produto.
+
+#### Resposta
+
+`Status code: 201`
+
+---
+
+### Alterar pedido
+> Usa **PUT**: o pedido é substituído por inteiro, então `cliente_id` e `itens` são obrigatórios. **PATCH retorna 405.**
+
+```
+PUT /pedidos/{id}
+Content-Type: application/json
+```
+
+*Body*: mesmo formato da criação.
+
+Os itens atuais são marcados como excluídos (o histórico é preservado) e os novos são criados.
+
+#### Resposta
+
+`Status code: 200`
+
+---
+
+### Deletar pedido (Soft delete)
+> Marca o pedido e todos os seus itens ativos como excluídos. Os registros excluídos não são retornados nas consultas.
+
+```
+DELETE /pedidos/{id}
+```
+
+#### Resposta
+
+`Status code: 200`
+
+---
 
 ## 🖼️ Upload de Imagens
 
